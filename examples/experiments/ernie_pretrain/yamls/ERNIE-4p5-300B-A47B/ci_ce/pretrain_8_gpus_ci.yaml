@@ -23,7 +23,7 @@ model_args:
         moe_k: 4
         moe_capacity: [4,4,4]
 
-        multi_token_pred_depth: 1
+        num_nextn_predict_layers: 1
         use_ep_comm_overlap: false
         use_combine_before_a2a: true
         use_quant_before_a2a: true

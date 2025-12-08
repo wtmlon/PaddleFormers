@@ -209,10 +209,6 @@ class PreTrainingArguments(TrainingArguments):
         default=False,
         metadata={"help": "print global grad-norm"},
     )
-    multi_token_pred_depth: Optional[int] = field(
-        default=0,
-        metadata={},
-    )
     enable_mtp_magic_send: Optional[bool] = field(default=False, metadata={"help": ""})
     enable_optimizer_timer: Optional[bool] = field(default=False, metadata={"help": "enable timer in zero-1"})
     lr_scheduler: str = field(

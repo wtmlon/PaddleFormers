@@ -138,7 +138,7 @@ def create_pretrained_dataset(args):
         data_impl="mmap",
         splits_string=args.split,
         train_val_test_num_samples=train_val_test_num_samples,
-        seq_length=args.max_seq_length + args.multi_token_pred_depth,
+        seq_length=args.max_seq_length + args.num_nextn_predict_layers,
         seed=args.seed,
         skip_warmup=True,
         data_cache_path=None,
@@ -400,7 +400,7 @@ def main():
     if args.moe_group.lower() in {"mp", "tp", "model", "dummy"}:
         logger.info(f"disable moe flag when using moe-group={args.moe_group}")
         args.use_moe = False
-    args.multi_token_pred_depth = model_config.get("multi_token_pred_depth", 0)
+    args.num_nextn_predict_layers = model_config.get("num_nextn_predict_layers", 0)
 
     cfg = ErnieMoEConfig.from_pretrained(args.model_name_or_path)
     cfg.seqlen = args.max_seq_length
@@ -498,7 +498,7 @@ def main():
             collate_fn,
             tokenizer=tokenizer,
             training_args=TrainingArguments(
-                output_dir=args.output_dir, num_nextn_predict_layers=args.multi_token_pred_depth
+                output_dir=args.output_dir, num_nextn_predict_layers=args.num_nextn_predict_layers
             ),
             model_args=ModelConfig(stage="SFT", use_attn_mask_startend_row_indices=True),
             max_seq_len=args.max_seq_length + 1,

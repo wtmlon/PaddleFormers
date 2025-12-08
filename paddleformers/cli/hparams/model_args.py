@@ -218,6 +218,22 @@ class ModelArguments:
         default=None,
         metadata={"help": "num_hidden_layers."},
     )
+    hidden_size: Optional[int] = field(
+        default=None,
+        metadata={"help": "Hidden size."},
+    )
+    num_attention_heads: Optional[int] = field(
+        default=None,
+        metadata={"help": "num_attention_heads."},
+    )
+    softmax_scale: Optional[float] = field(
+        default=None,
+        metadata={"help": "softmax_scale."},
+    )
+    softmax_type: Optional[str] = field(
+        default=None,
+        metadata={"help": "softmax_type."},
+    )
 
     def __post_init__(self):
         if self.fine_tuning.lower() == "LoRA".lower():
