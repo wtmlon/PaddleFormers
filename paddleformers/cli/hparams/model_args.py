@@ -266,6 +266,30 @@ class ModelArguments:
         default=None,
         metadata={"help": "hidden_act."},
     )
+    n_routed_experts: Optional[int] = field(
+        default=None,
+        metadata={"help": "n_routed_experts."},
+    )
+    sliding_window: Optional[int] = field(
+        default=None,
+        metadata={"help": "sliding_window."},
+    )
+    normalization: Optional[str] = field(
+        default=None,
+        metadata={"help": "normalization."},
+    )
+    qk_layernorm: Optional[bool] = field(
+        default=None,
+        metadata={"help": "qk_layernorm."},
+    )
+    init_method_std: Optional[float] = field(
+        default=None,
+        metadata={"help": "init_method_std."},
+    )
+    apply_rope_fusion: Optional[bool] = field(
+        default=None,
+        metadata={"help": "Whether to apply RoPE fusion."},
+    )
 
     def __post_init__(self):
         if self.fine_tuning.lower() == "LoRA".lower():
