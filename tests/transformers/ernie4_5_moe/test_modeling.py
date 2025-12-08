@@ -57,6 +57,7 @@
 #         eos_token_id=2,
 #         fuse_swiglu=False,
 #         use_bias=False,
+#         attention_bias=False,
 #         rope_theta=10000,
 #         max_sequence_length=8,
 #         ignored_index=-100,
@@ -127,6 +128,7 @@
 #         self.micro_batch_size = micro_batch_size
 #         self.max_sequence_length = max_sequence_length
 #         self.use_bias = use_bias
+#         self.attention_bias = attention_bias
 #         self.rope_theta = rope_theta
 #         self.ignored_index = ignored_index
 #         self.attention_dropout_prob = attention_dropout_prob
@@ -218,6 +220,7 @@
 #             micro_batch_size=self.micro_batch_size,
 #             max_sequence_length=self.max_sequence_length,
 #             use_bias=self.use_bias,
+#             attention_bias=self.attention_bias,
 #             rope_theta=self.rope_theta,
 #             ignored_index=self.ignored_index,
 #             attention_dropout_prob=self.attention_dropout_prob,

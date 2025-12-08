@@ -187,7 +187,7 @@ class Ernie4_5Attention(nn.Layer):
         self.q_proj = GeneralLinear.create(
             self.hidden_size,
             q_hidden_size,
-            has_bias=config.use_bias,
+            has_bias=config.attention_bias,
             config=config,
             fuse_matmul_bias=config.fuse_linear,
             tp_plan="colwise",
@@ -195,7 +195,7 @@ class Ernie4_5Attention(nn.Layer):
         self.k_proj = GeneralLinear.create(
             self.hidden_size,
             kv_hidden_size,
-            has_bias=config.use_bias,
+            has_bias=config.attention_bias,
             config=config,
             fuse_matmul_bias=config.fuse_linear,
             tp_plan="colwise",
@@ -203,7 +203,7 @@ class Ernie4_5Attention(nn.Layer):
         self.v_proj = GeneralLinear.create(
             self.hidden_size,
             kv_hidden_size,
-            has_bias=config.use_bias,
+            has_bias=config.attention_bias,
             config=config,
             fuse_matmul_bias=config.fuse_linear,
             tp_plan="colwise",
@@ -212,7 +212,7 @@ class Ernie4_5Attention(nn.Layer):
         self.o_proj = GeneralLinear.create(
             q_hidden_size,
             self.hidden_size,
-            has_bias=config.use_bias,
+            has_bias=config.attention_bias,
             config=config,
             fuse_matmul_bias=config.fuse_linear,
             tp_plan="rowwise",
@@ -335,8 +335,9 @@ class Ernie4_5DecoderLayer(nn.Layer):
             if not hasattr(config, "disable_ffn_model_parallel"):
                 self.input_layernorm.enable_sequence_parallel()
                 if config.use_bias:
-                    mark_as_sequence_parallel_parameter(self.self_attn.o_proj.bias)
                     mark_as_sequence_parallel_parameter(self.mlp.down_proj.bias)
+                if config.attention_bias:
+                    mark_as_sequence_parallel_parameter(self.self_attn.o_proj.bias)
 
     def forward(
         self,

@@ -669,7 +669,7 @@ class Ernie4_5_Attention(nn.Layer):
             self.q_proj = ColumnLN(
                 self.hidden_size,
                 q_hidden_size,
-                has_bias=config.use_bias,
+                has_bias=config.attention_bias,
                 gather_output=False,
                 fuse_matmul_bias=config.fuse_linear,
                 **column_ln_configs,
@@ -677,7 +677,7 @@ class Ernie4_5_Attention(nn.Layer):
             self.k_proj = ColumnLN(
                 self.hidden_size,
                 kv_hidden_size,
-                has_bias=config.use_bias,
+                has_bias=config.attention_bias,
                 gather_output=False,
                 fuse_matmul_bias=config.fuse_linear,
                 **column_ln_configs,
@@ -685,7 +685,7 @@ class Ernie4_5_Attention(nn.Layer):
             self.v_proj = ColumnLN(
                 self.hidden_size,
                 kv_hidden_size,
-                has_bias=config.use_bias,
+                has_bias=config.attention_bias,
                 gather_output=False,
                 fuse_matmul_bias=config.fuse_linear,
                 **column_ln_configs,
@@ -695,17 +695,17 @@ class Ernie4_5_Attention(nn.Layer):
             self.q_proj = LinearFN(
                 self.hidden_size,
                 q_hidden_size,
-                bias_attr=config.use_bias,
+                bias_attr=config.attention_bias,
             )
             self.k_proj = LinearFN(
                 self.hidden_size,
                 kv_hidden_size,
-                bias_attr=config.use_bias,
+                bias_attr=config.attention_bias,
             )
             self.v_proj = LinearFN(
                 self.hidden_size,
                 kv_hidden_size,
-                bias_attr=config.use_bias,
+                bias_attr=config.attention_bias,
             )
 
         if config.tensor_parallel_degree > 1:
@@ -721,7 +721,7 @@ class Ernie4_5_Attention(nn.Layer):
             self.o_proj = RowLN(
                 (self.hidden_size if getattr(config, "head_dim", None) is None else q_hidden_size),
                 self.hidden_size,
-                has_bias=config.use_bias,
+                has_bias=config.attention_bias,
                 input_is_parallel=True,
                 fuse_matmul_bias=config.fuse_linear,
                 **row_ln_configs,
@@ -731,7 +731,7 @@ class Ernie4_5_Attention(nn.Layer):
             self.o_proj = LinearFN(
                 (self.hidden_size if getattr(config, "head_dim", None) is None else q_hidden_size),
                 self.hidden_size,
-                bias_attr=config.use_bias,
+                bias_attr=config.attention_bias,
             )
         self.rotary_emb = RopeEmbedding(
             self.head_dim,

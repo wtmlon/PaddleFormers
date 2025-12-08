@@ -891,7 +891,7 @@ class ErnieAttention(nn.Layer):
                 self.qkv_proj = ColumnLN(
                     self.hidden_size,
                     q_hidden_size + 2 * kv_hidden_size,
-                    has_bias=config.use_bias,
+                    has_bias=config.attention_bias,
                     gather_output=False,
                     fuse_matmul_bias=config.fuse_linear,
                     **column_ln_configs,
@@ -900,7 +900,7 @@ class ErnieAttention(nn.Layer):
                 self.q_proj = ColumnLN(
                     self.hidden_size,
                     q_hidden_size,
-                    has_bias=config.use_bias,
+                    has_bias=config.attention_bias,
                     gather_output=False,
                     fuse_matmul_bias=config.fuse_linear,
                     **column_ln_configs,
@@ -908,7 +908,7 @@ class ErnieAttention(nn.Layer):
                 self.k_proj = ColumnLN(
                     self.hidden_size,
                     kv_hidden_size,
-                    has_bias=config.use_bias,
+                    has_bias=config.attention_bias,
                     gather_output=False,
                     fuse_matmul_bias=config.fuse_linear,
                     **column_ln_configs,
@@ -916,7 +916,7 @@ class ErnieAttention(nn.Layer):
                 self.v_proj = ColumnLN(
                     self.hidden_size,
                     kv_hidden_size,
-                    has_bias=config.use_bias,
+                    has_bias=config.attention_bias,
                     gather_output=False,
                     fuse_matmul_bias=config.fuse_linear,
                     **column_ln_configs,
@@ -927,23 +927,23 @@ class ErnieAttention(nn.Layer):
                 self.qkv_proj = LinearFN(
                     self.hidden_size,
                     q_hidden_size + 2 * kv_hidden_size,
-                    bias_attr=config.use_bias,
+                    bias_attr=config.attention_bias,
                 )
             else:
                 self.q_proj = LinearFN(
                     self.hidden_size,
                     q_hidden_size,
-                    bias_attr=config.use_bias,
+                    bias_attr=config.attention_bias,
                 )
                 self.k_proj = LinearFN(
                     self.hidden_size,
                     kv_hidden_size,
-                    bias_attr=config.use_bias,
+                    bias_attr=config.attention_bias,
                 )
                 self.v_proj = LinearFN(
                     self.hidden_size,
                     kv_hidden_size,
-                    bias_attr=config.use_bias,
+                    bias_attr=config.attention_bias,
                 )
 
         if config.tensor_parallel_degree > 1:
@@ -958,7 +958,7 @@ class ErnieAttention(nn.Layer):
             self.o_proj = RowLN(
                 q_hidden_size,
                 self.hidden_size,
-                has_bias=config.use_bias,
+                has_bias=config.attention_bias,
                 input_is_parallel=True,
                 fuse_matmul_bias=config.fuse_linear,
                 **row_ln_configs,
@@ -968,7 +968,7 @@ class ErnieAttention(nn.Layer):
             self.o_proj = LinearFN(
                 q_hidden_size,
                 self.hidden_size,
-                bias_attr=config.use_bias,
+                bias_attr=config.attention_bias,
             )
         if config.rope_reorder:
             self.rotary_emb = RotaryEmbedding(
@@ -1385,9 +1385,14 @@ class ErniePretrainedModel(PretrainedModel):
                 if config.use_bias:
                     base_actions.update(
                         {
-                            "layers.0.self_attn.qkv_proj.bias": qkv_fn,
                             "layers.0.mlp.up_gate_proj.bias": partial(fn, is_column=True, is_naive_2fuse=True),
                             "lm_head.bias": partial(fn, is_column=True),
+                        }
+                    )
+                if config.attention_bias:
+                    base_actions.update(
+                        {
+                            "layers.0.self_attn.qkv_proj.bias": qkv_fn,
                         }
                     )
             else:
@@ -1405,12 +1410,17 @@ class ErniePretrainedModel(PretrainedModel):
                 if config.use_bias:
                     base_actions.update(
                         {
-                            "layers.0.self_attn.q_proj.bias": partial(fn, is_column=True),
-                            "layers.0.self_attn.k_proj.bias": partial(fn, is_column=True),
-                            "layers.0.self_attn.v_proj.bias": partial(fn, is_column=True),
                             "layers.0.mlp.gate_proj.bias": partial(fn, is_column=True),
                             "layers.0.mlp.up_proj.bias": partial(fn, is_column=True),
                             "lm_head.bias": partial(fn, is_column=True),
+                        }
+                    )
+                if config.attention_bias:
+                    base_actions.update(
+                        {
+                            "layers.0.self_attn.q_proj.bias": partial(fn, is_column=True),
+                            "layers.0.self_attn.k_proj.bias": partial(fn, is_column=True),
+                            "layers.0.self_attn.v_proj.bias": partial(fn, is_column=True),
                         }
                     )
             for key, action in base_actions.items():

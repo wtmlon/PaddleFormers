@@ -49,6 +49,7 @@ class Ernie4_5Config(PretrainedConfig):
         bos_token_id=1,
         eos_token_id=2,
         use_bias=False,
+        attention_bias=False,
         rope_theta=10000,
         fuse_rope=False,
         fuse_softmax_mask=False,
@@ -88,6 +89,7 @@ class Ernie4_5Config(PretrainedConfig):
             bos_token_id (int): Token ID used for beginning-of-sequence
             eos_token_id (int): Token ID used for end-of-sequence
             use_bias (bool): Whether to use bias terms in linear layers
+            attention_bias (bool): Whether to use bias terms in attention layers
             rope_theta (float): The base period of the RoPE embeddings
             fuse_rope (bool): Whether to fuse RoPE operations
             fuse_linear (bool): Whether to fuse linear operations
@@ -132,6 +134,7 @@ class Ernie4_5Config(PretrainedConfig):
 
         self.max_sequence_length = max_sequence_length
         self.use_bias = use_bias
+        self.attention_bias = attention_bias
         self.rope_theta = rope_theta
         self.tie_word_embeddings = tie_word_embeddings
         self.fuse_rope = fuse_rope

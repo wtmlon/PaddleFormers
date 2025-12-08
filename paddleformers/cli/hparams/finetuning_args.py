@@ -355,6 +355,10 @@ class FinetuningArguments(
         default=0.0,
         metadata={"help": "dropout probability for hidden layers"},
     )
+    attention_dropout: float = field(
+        default=None,
+        metadata={"help": "dropout probability for attention layers"},
+    )
     attention_probs_dropout_prob: float = field(
         default=0.0,
         metadata={"help": "dropout probability for attention layers"},

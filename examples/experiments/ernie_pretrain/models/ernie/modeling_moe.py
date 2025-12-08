@@ -1356,10 +1356,15 @@ class ErniePretrainedModel(PretrainedModel):
                 if config.use_bias:
                     base_actions.update(
                         {
-                            "layers.0.self_attn.qkv_proj.bias": qkv_fn,
                             "layers.0.mlp.up_gate_proj.bias": partial(fn, is_column=True, is_naive_2fuse=True),
                             "layers.0.mlp.down_proj.bias": lambda x: x,
                             "lm_head.bias": partial(fn, is_column=True),
+                        }
+                    )
+                if config.attention_bias:
+                    base_actions.update(
+                        {
+                            "layers.0.self_attn.qkv_proj.bias": qkv_fn,
                         }
                     )
             else:
@@ -1376,13 +1381,18 @@ class ErniePretrainedModel(PretrainedModel):
                 if config.use_bias:
                     base_actions.update(
                         {
-                            "layers.0.self_attn.q_proj.bias": partial(fn, is_column=True),
-                            "layers.0.self_attn.k_proj.bias": partial(fn, is_column=True),
-                            "layers.0.self_attn.v_proj.bias": partial(fn, is_column=True),
                             "layers.0.mlp.gate_proj.bias": partial(fn, is_column=True),
                             "layers.0.mlp.up_proj.bias": partial(fn, is_column=True),
                             "layers.0.mlp.down_proj.bias": lambda x: x,
                             "lm_head.bias": partial(fn, is_column=True),
+                        }
+                    )
+                if config.attention_bias:
+                    base_actions.update(
+                        {
+                            "layers.0.self_attn.q_proj.bias": partial(fn, is_column=True),
+                            "layers.0.self_attn.k_proj.bias": partial(fn, is_column=True),
+                            "layers.0.self_attn.v_proj.bias": partial(fn, is_column=True),
                         }
                     )
             moe_in_mp = config.moe_group in {"mp", "model", "tp", "mpdp"}

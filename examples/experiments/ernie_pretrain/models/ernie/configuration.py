@@ -96,6 +96,7 @@ class ErnieMoEConfig(PretrainedConfig):
         fuse_attn_ffn=False,
         fuse_swiglu=False,
         use_bias=False,
+        attention_bias=False,
         expert_mlp_use_bias=None,
         rope_reorder=True,
         rope_theta=10000,
@@ -227,6 +228,7 @@ class ErnieMoEConfig(PretrainedConfig):
 
         self.seqlen = seqlen
         self.use_bias = use_bias
+        self.attention_bias = attention_bias
         self.weight_share_add_bias = weight_share_add_bias
         self.rope_reorder = rope_reorder
         self.rope_theta = rope_theta

@@ -234,6 +234,38 @@ class ModelArguments:
         default=None,
         metadata={"help": "softmax_type."},
     )
+    num_key_value_heads: Optional[int] = field(
+        default=None,
+        metadata={"help": "num_key_value_heads."},
+    )
+    intermediate_size: Optional[int] = field(
+        default=None,
+        metadata={"help": "intermediate_size."},
+    )
+    head_dim: Optional[int] = field(
+        default=None,
+        metadata={"help": "head_dim."},
+    )
+    fp32_residual_connection: Optional[bool] = field(
+        default=None,
+        metadata={"help": "Whether to perform residual connection in fp32."},
+    )
+    rms_norm_eps: Optional[float] = field(
+        default=None,
+        metadata={"help": "rms_norm_eps."},
+    )
+    use_bias: Optional[bool] = field(
+        default=None,
+        metadata={"help": "Whether to use bias."},
+    )
+    attention_bias: Optional[bool] = field(
+        default=None,
+        metadata={"help": "Whether to use attention bias."},
+    )
+    hidden_act: Optional[str] = field(
+        default=None,
+        metadata={"help": "hidden_act."},
+    )
 
     def __post_init__(self):
         if self.fine_tuning.lower() == "LoRA".lower():

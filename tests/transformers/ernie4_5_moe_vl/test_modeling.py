@@ -78,6 +78,7 @@ class Ernie4_5_VLModelTester:
         use_cache=True,
         use_rmsnorm=True,
         use_bias=False,
+        attention_bias=False,
         max_position_embeddings=512,
         type_sequence_label_size=2,
         num_labels=3,
@@ -139,6 +140,7 @@ class Ernie4_5_VLModelTester:
         self.use_cache = use_cache
         self.use_rmsnorm = use_rmsnorm
         self.use_bias = use_bias
+        self.attention_bias = attention_bias
         self.max_position_embeddings = max_position_embeddings
         self.type_sequence_label_size = type_sequence_label_size
         self.num_labels = num_labels
@@ -269,6 +271,7 @@ class Ernie4_5_VLModelTester:
             use_cache=self.use_cache,
             use_rmsnorm=self.use_rmsnorm,
             use_bias=self.use_bias,
+            attention_bias=self.attention_bias,
             max_position_embeddings=self.max_position_embeddings,
             pad_token_id=self.pad_token_id,
             bos_token_id=self.bos_token_id,
