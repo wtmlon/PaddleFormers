@@ -290,6 +290,10 @@ class ModelArguments:
         default=None,
         metadata={"help": "Whether to apply RoPE fusion."},
     )
+    rope_theta: Optional[float] = field(
+        default=None,
+        metadata={"help": "rope_theta."},
+    )
 
     def __post_init__(self):
         if self.fine_tuning.lower() == "LoRA".lower():
